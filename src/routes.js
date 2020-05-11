@@ -36,6 +36,11 @@ const Widgets = React.lazy(() => import('./views/Widgets/Widgets'));
 const Users = React.lazy(() => import('./views/Users/Users'));
 const User = React.lazy(() => import('./views/Users/User'));
 
+
+const SunEditor = React.lazy(() => import('./views/Wysiwyg/SunEditor/SunEditor'));
+const TinyMCE = React.lazy(() => import('./views/Wysiwyg/TinyMCE/TinyMCE'));
+const Draf = React.lazy(() => import('./views/Wysiwyg/Draf/Draf'));
+
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -79,6 +84,10 @@ const routes = [
   { path: '/charts', name: 'Charts', component: Charts },
   { path: '/users', exact: true,  name: 'Users', component: Users },
   { path: '/users/:id', exact: true, name: 'User Details', component: User },
+
+  { path: '/wysiwyg/suneditor', name: 'SunEditor', component: SunEditor},
+  { path: '/wysiwyg/tinymce', name: 'TyneMCE', component: TinyMCE},
+  { path: '/wysiwyg/draf', name: 'Draf', component: Draf},
 ];
 
 export default routes;

@@ -256,6 +256,25 @@ export default {
       ],
     },
     {
+      title: true,
+      name: 'Wysiwyg',
+    },
+    {
+      name: 'SunEditor',
+      url: '/wysiwyg/suneditor',
+      icon: 'icon-start',
+    },
+    {
+      name: 'TinyMCE',
+      url: '/wysiwyg/tinymce',
+      icon: 'icon-start',
+    },
+    {
+      name: 'Draf',
+      url: '/wysiwyg/draf',
+      icon: 'icon-start',
+    },
+    {
       name: 'Disabled',
       url: '/dashboard',
       icon: 'icon-ban',
