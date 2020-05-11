@@ -270,8 +270,8 @@ export default {
       icon: 'icon-start',
     },
     {
-      name: 'Draf',
-      url: '/wysiwyg/draf',
+      name: 'React-Draf-Wysiwyg',
+      url: '/wysiwyg/draft',
       icon: 'icon-start',
     },
     {

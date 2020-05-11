@@ -39,7 +39,7 @@ const User = React.lazy(() => import('./views/Users/User'));
 
 const SunEditor = React.lazy(() => import('./views/Wysiwyg/SunEditor/SunEditor'));
 const TinyMCE = React.lazy(() => import('./views/Wysiwyg/TinyMCE/TinyMCE'));
-const Draf = React.lazy(() => import('./views/Wysiwyg/Draf/Draf'));
+const Draft = React.lazy(() => import('./views/Wysiwyg/Draf/Draft'));
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
@@ -87,7 +87,7 @@ const routes = [
 
   { path: '/wysiwyg/suneditor', name: 'SunEditor', component: SunEditor},
   { path: '/wysiwyg/tinymce', name: 'TyneMCE', component: TinyMCE},
-  { path: '/wysiwyg/draf', name: 'Draf', component: Draf},
+  { path: '/wysiwyg/draft', name: 'Draft', component: Draft},
 ];
 
 export default routes;
