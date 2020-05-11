@@ -1,39 +1,42 @@
 import React, { Component } from "react"
-import { EditorState, convertToRaw } from 'draft-js';
+import { convertFromRaw } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
-import draftToHtml from 'draftjs-to-html';
-import htmlToDraft from 'html-to-draftjs';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 
+const content = {"entityMap":{},"blocks":[{"key":"637gr","text":"Initialized from content state.","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}]};
+
 class Draft extends Component {
-  state = {
-    editorState: EditorState.createEmpty(),
+  constructor(props) {
+    super(props);
+    const contentState = convertFromRaw(content);
+    this.state = {
+      contentState,
+    }
   }
 
-  onEditorStateChange = (editorState) => {
+  onContentStateChange = (contentState) => {
     this.setState({
-      editorState,
+      contentState,
     });
   };
-  
- 
+
+
 
   render() {
-    const { editorState } = this.state;
+    const { contentState } = this.state;
     return (
       <div>
         <Editor
-          editorState={editorState}
           wrapperClassName="demo-wrapper"
           editorClassName="demo-editor"
-          onEditorStateChange={this.onEditorStateChange}
+          onContentStateChange={this.onContentStateChange}
         />
-        <textarea
+        <textarea  rows="50" cols="130"
           disabled
-          value={draftToHtml(convertToRaw(editorState.getCurrentContent()))}
+          value={JSON.stringify(contentState, null, 4)}
         />
       </div>
-    )
+    );
   }
 }
 
