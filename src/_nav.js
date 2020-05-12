@@ -275,6 +275,11 @@ export default {
       icon: 'icon-start',
     },
     {
+      name: 'WEB-React-Draf-Wysiwyg',
+      url: '/wysiwyg/draftweb',
+      icon: 'icon-start',
+    },
+    {
       name: 'Disabled',
       url: '/dashboard',
       icon: 'icon-ban',

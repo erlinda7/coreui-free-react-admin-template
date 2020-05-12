@@ -1,40 +1,58 @@
 import React, { Component } from "react"
-import { convertFromRaw } from 'draft-js';
+import { EditorState, convertFromRaw, convertToRaw } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 
-const content = {"entityMap":{},"blocks":[{"key":"637gr","text":"Initialized from content state.","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}]};
+
+import { db } from '../../../services/firebase/setup'
+
 
 class Draft extends Component {
   constructor(props) {
     super(props);
-    const contentState = convertFromRaw(content);
-    this.state = {
-      contentState,
-    }
+    this.state = { editorState: EditorState.createEmpty() }
+    //   this.enviarDatos = this.enviarDatos.bind(this)
   }
 
-  onContentStateChange = (contentState) => {
-    this.setState({
-      contentState,
-    });
-  };
+  onChange = (editorState) => this.setState({ editorState });
+
+  // enviarDatos = async (infJSON) => {
+
+  //   await db
+  //     .collection('draft3')
+  //     .add({ infJSON })
+  //     .then(function (docRef) {
+  //       console.log("Document written with ID: ", docRef.id);
+  //     })
+  //     .catch(function (error) {
+  //       console.error("Error adding document: ", error);
+  //     });
+  // }
+
 
 
 
   render() {
-    const { contentState } = this.state;
+    console.log('convert', convertToRaw(this.state.editorState.getCurrentContent()));
+    const infJSON = convertToRaw(this.state.editorState.getCurrentContent())
     return (
+
       <div>
         <Editor
-          wrapperClassName="demo-wrapper"
-          editorClassName="demo-editor"
-          onContentStateChange={this.onContentStateChange}
+          editorState={this.state.editorState}
+          wrapperClassName="wrapper-class"
+          editorClassName="editor-class"
+          toolbarClassName="toolbar-class"
+          onEditorStateChange={this.onChange}
         />
-        <textarea  rows="50" cols="130"
+        <textarea rows="50" cols="130"
           disabled
-          value={JSON.stringify(contentState, null, 4)}
+          value={JSON.stringify(this.state.editorState, null, 4)}
         />
+
+        {/* <button onChange={this.enviarDatos(infJSON)}>Enviar</button> */}
+
+
       </div>
     );
   }
