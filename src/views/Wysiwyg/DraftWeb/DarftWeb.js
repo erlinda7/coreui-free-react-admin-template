@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 
+import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser';
 
 import { db } from '../../../services/firebase/setup'
 
@@ -34,12 +35,17 @@ class DraftWeb extends Component {
             <div>
                 <h1>desde firebase</h1>
                 <div >
-                    {
+                    {/* {
                         this.state.parrafo? <div
                         dangerouslySetInnerHTML={{
                             __html: this.state.parrafo
                         }}></div>
                         :<p>Loading....</p>
+                    } */}
+                    {
+                        this.state.parrafo ? 
+                        <div>{ ReactHtmlParser(this.state.parrafo) }</div>
+                        :<p>Loading...</p>
                     }
                 </div>
             </div>
