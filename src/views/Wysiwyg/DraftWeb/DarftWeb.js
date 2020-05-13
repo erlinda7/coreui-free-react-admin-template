@@ -1,7 +1,4 @@
 import React, { Component } from 'react';
-import { stateToHTML } from 'draft-js-export-html';
-import { convertFromRaw, convertToRaw } from 'draft-js';
-import draftToHtml from 'draftjs-to-html';
 
 
 import { db } from '../../../services/firebase/setup'
@@ -9,19 +6,11 @@ import { db } from '../../../services/firebase/setup'
 class DraftWeb extends Component {
     constructor(props) {
         super(props);
-
         this.state = {}
-        this.convertCommentFromJSONToHTML = this.convertCommentFromJSONToHTML.bind(this)
-
-    }
-
-    convertCommentFromJSONToHTML = (text) => {
-        return stateToHTML(convertFromRaw(JSON.parse(text)))
     }
 
     async componentDidMount() {
-        const docRef = await db.collection("draft3").doc("UWNLIiJYpeiNksaHFvKu")
-
+        const docRef = await db.collection("draftHtml").doc("wyf3gfXgNfB75Z6szMIA")
             .get().then(function (doc) {
                 if (doc.exists) {
                     console.log("Document data:", doc.data());
@@ -38,23 +27,14 @@ class DraftWeb extends Component {
     }
 
     render() {
-        const { editorState } = this.state;
-        if (this.state.infJSON) {
-            console.log(this.state.infJSON);
-            // console.log(stateToHTML(convertFromRaw(JSON.parse(this.state.infJSON))));
-          //  console.log(draftToHtml(convertToRaw(editorState.getCurrentContent())));
-
-
-        }
+        console.log('state', this.state);
+       
 
         return (
             <div>
                 <h1>desde firebase</h1>
                 <div>
-                    {/* <textarea rows="20" cols="100"
-                        disabled
-                        value={this.state.infJSON ? draftToHtml(convertToRaw(editorState.infJSON.getCurrentContent())):''}
-                    /> */}
+                {this.state.parrafo ? this.state.parrafo.map(p=>(<div>p</div>)):<h1>No existe</h1>}
                 </div>
 
             </div>

@@ -1,6 +1,9 @@
-import React, { Component } from "react"
-import { EditorState, convertFromRaw, convertToRaw } from 'draft-js';
+import React, { Component } from 'react';
+import { EditorState, convertToRaw } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
+import draftToHtml from 'draftjs-to-html';
+import htmlToDraft from 'html-to-draftjs';
+
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 
 
@@ -11,46 +14,53 @@ class Draft extends Component {
   constructor(props) {
     super(props);
     this.state = { editorState: EditorState.createEmpty() }
-    //   this.enviarDatos = this.enviarDatos.bind(this)
+    this.enviarDatos = this.enviarDatos.bind(this)
   }
 
-  onChange = (editorState) => this.setState({ editorState });
+  onEditorStateChange = (editorState) => {
+    this.setState({
+      editorState,
+    });
+  };
 
-  // enviarDatos = async (infJSON) => {
-
-  //   await db
-  //     .collection('draft3')
-  //     .add({ infJSON })
-  //     .then(function (docRef) {
-  //       console.log("Document written with ID: ", docRef.id);
-  //     })
-  //     .catch(function (error) {
-  //       console.error("Error adding document: ", error);
-  //     });
-  // }
+  enviarDatos = async () => {
+    const { editorState } = this.state;
+    const parrafo = draftToHtml(convertToRaw(editorState.getCurrentContent()))
+    console.log('enviando', {parrafo:parrafo});
+      await db
+        .collection('draftHtml')
+        .add({ parrafo: parrafo })
+        .then(function (docRef) {
+          console.log("Document written with ID: ", docRef.id);
+        })
+        .catch(function (error) {
+          console.error("Error adding document: ", error);
+        });
+  }
 
 
 
 
   render() {
-    console.log('convert', convertToRaw(this.state.editorState.getCurrentContent()));
-    const infJSON = convertToRaw(this.state.editorState.getCurrentContent())
+    const { editorState } = this.state;
+
+    console.log('editorState', draftToHtml(convertToRaw(editorState.getCurrentContent())));
     return (
 
       <div>
         <Editor
-          editorState={this.state.editorState}
+          editorState={editorState}
           wrapperClassName="wrapper-class"
           editorClassName="editor-class"
           toolbarClassName="toolbar-class"
-          onEditorStateChange={this.onChange}
+          onEditorStateChange={this.onEditorStateChange}
         />
-        <textarea rows="50" cols="130"
+        <textarea rows="10" cols="100"
           disabled
-          value={JSON.stringify(this.state.editorState, null, 4)}
+          value={draftToHtml(convertToRaw(editorState.getCurrentContent()))}
         />
 
-        {/* <button onChange={this.enviarDatos(infJSON)}>Enviar</button> */}
+        <button onClick={this.enviarDatos}>Enviar</button>
 
 
       </div>
