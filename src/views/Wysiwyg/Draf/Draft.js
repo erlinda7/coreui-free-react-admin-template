@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { EditorState, ContentState, } from 'draft-js';
+import { EditorState, ContentState } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 
-import {stateFromHTML} from 'draft-js-import-html'
+//import {stateFromHTML} from 'draft-js-import-html'
 
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 
@@ -15,9 +15,9 @@ class Draft extends Component {
     super(props);
     // this.state = { editorState: EditorState.createEmpty() }
     
-    //this.state = { editorState: EditorState.createWithContent(ContentState.createFromText('Hello')) }
-    const contentState = stateFromHTML('<h1>Hello</h1>');
-    this.state= {editorState: EditorState.createWithContent(contentState)}
+    const plainText = 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit.';
+    const content = ContentState.createFromText(plainText);
+    this.state= {editorState: EditorState.createWithContent(content)}
    // this.enviarDatos = this.enviarDatos.bind(this)
   }
 
