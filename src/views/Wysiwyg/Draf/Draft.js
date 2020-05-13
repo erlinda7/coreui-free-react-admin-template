@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { EditorState, convertFromRaw } from 'draft-js';
+import { EditorState, convertFromHTML, ContentState } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 
 //import {stateFromHTML} from 'draft-js-import-html'
@@ -14,51 +14,19 @@ class Draft extends Component {
   constructor(props) {
     super(props);
     // this.state = { editorState: EditorState.createEmpty() }
-    const rawJsText = `{
-      "entityMap": {},
-      "blocks": [
-        {
-          "key": "e4brl",
-          "text": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit.",
-          "type": "unstyled",
-          "depth": 0,
-          "inlineStyleRanges": [
-            {
-              "offset": 0,
-              "length": 11,
-              "style": "BOLD"
-            },
-            {
-              "offset": 28,
-              "length": 29,
-              "style": "BOLD"
-            },
-            {
-              "offset": 12,
-              "length": 15,
-              "style": "ITALIC"
-            },
-            {
-              "offset": 28,
-              "length": 28,
-              "style": "ITALIC"
-            }
-          ],
-          "entityRanges": [],
-          "data": {}
-        },
-        {
-          "key": "3bflg",
-          "text": "Aenean commodo ligula eget dolor.",
-          "type": "unstyled",
-          "depth": 0,
-          "inlineStyleRanges": [],
-          "entityRanges": [],
-          "data": {}
-        }
-      ]
-    }`;
-    const content  = convertFromRaw(JSON.parse(rawJsText));
+    const html = `<p>Lorem ipsum <b>dolor</b> sit amet, <i>consectetuer adipiscing elit.</i></p>
+    <p>Aenean commodo ligula eget dolor. <b><i>Aenean massa.</i></b></p>`;
+
+    const blocksFromHTML = convertFromHTML(html);
+
+    //version 0.9.1 convertFromHtml 
+    //const content = ContentState.createFromBlockArray(blocksFromHTML)
+    //version 0.10.0 convertFromHtml 
+    const content = ContentState.createFromBlockArray(
+      blocksFromHTML.contentBlocks,
+      blocksFromHTML.entityMap
+    )
+    
     this.state = { editorState: EditorState.createWithContent(content) }
     // this.enviarDatos = this.enviarDatos.bind(this)
   }
