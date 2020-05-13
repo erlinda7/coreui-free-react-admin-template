@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { EditorState, convertToRaw } from 'draft-js';
+import { EditorState, ContentState, } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
-import draftToHtml from 'draftjs-to-html';
-import htmlToDraft from 'html-to-draftjs';
+
+import {stateFromHTML} from 'draft-js-import-html'
 
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 
@@ -13,8 +13,12 @@ import { db } from '../../../services/firebase/setup'
 class Draft extends Component {
   constructor(props) {
     super(props);
-    this.state = { editorState: EditorState.createEmpty() }
-    this.enviarDatos = this.enviarDatos.bind(this)
+    // this.state = { editorState: EditorState.createEmpty() }
+    
+    //this.state = { editorState: EditorState.createWithContent(ContentState.createFromText('Hello')) }
+    const contentState = stateFromHTML('<h1>Hello</h1>');
+    this.state= {editorState: EditorState.createWithContent(contentState)}
+   // this.enviarDatos = this.enviarDatos.bind(this)
   }
 
   onEditorStateChange = (editorState) => {
@@ -23,20 +27,20 @@ class Draft extends Component {
     });
   };
 
-  enviarDatos = async () => {
-    const { editorState } = this.state;
-    const parrafo = draftToHtml(convertToRaw(editorState.getCurrentContent()))
-    console.log('enviando', {parrafo:parrafo});
-      await db
-        .collection('draftHtml')
-        .add({ parrafo: parrafo })
-        .then(function (docRef) {
-          console.log("Document written with ID: ", docRef.id);
-        })
-        .catch(function (error) {
-          console.error("Error adding document: ", error);
-        });
-  }
+  // enviarDatos = async () => {
+  //   const { editorState } = this.state;
+  //   const parrafo = draftToHtml(convertToRaw(editorState.getCurrentContent()))
+  //   console.log('enviando', { parrafo: parrafo });
+  //   await db
+  //     .collection('draftHtml')
+  //     .add({ parrafo: parrafo })
+  //     .then(function (docRef) {
+  //       console.log("Document written with ID: ", docRef.id);
+  //     })
+  //     .catch(function (error) {
+  //       console.error("Error adding document: ", error);
+  //     });
+  // }
 
 
 
@@ -44,7 +48,7 @@ class Draft extends Component {
   render() {
     const { editorState } = this.state;
 
-    console.log('editorState', draftToHtml(convertToRaw(editorState.getCurrentContent())));
+   // console.log('editorState', draftToHtml(convertToRaw(editorState.getCurrentContent())));
     return (
 
       <div>
@@ -55,12 +59,12 @@ class Draft extends Component {
           toolbarClassName="toolbar-class"
           onEditorStateChange={this.onEditorStateChange}
         />
-        <textarea rows="10" cols="100"
+        {/* <textarea rows="10" cols="100"
           disabled
           value={draftToHtml(convertToRaw(editorState.getCurrentContent()))}
-        />
+        /> */}
 
-        <button onClick={this.enviarDatos}>Enviar</button>
+        {/* <button onClick={this.enviarDatos}>Enviar</button> */}
 
 
       </div>
