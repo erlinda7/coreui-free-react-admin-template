@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 
 import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser';
 
+import { convertToRaw, convertFromRaw } from 'draft-js';
+import draftToHtml from 'draftjs-to-html';
+
 import { db } from '../../../services/firebase/setup'
 
 class DraftWeb extends Component {
@@ -9,13 +12,13 @@ class DraftWeb extends Component {
         super(props);
 
         this.state = {
-            parrafo: '',
+            contenS:''
         }
     }
 
     async componentDidMount() {
 
-        const docRef = await db.collection("draftHtml").doc("wyf3gfXgNfB75Z6szMIA")
+        const docRef = await db.collection("draft2").doc("32twWPBBmex2jyN2ROrc")
             .get().then(function (doc) {
                 if (doc.exists) {
                     console.log("Document data:", doc.data());
@@ -26,26 +29,25 @@ class DraftWeb extends Component {
             }).catch(function (error) {
                 console.log("Error getting document:", error);
             });
-        this.setState(docRef)
+        // this.setState(docRef)
+        const c = convertFromRaw(JSON.parse(docRef.contenS))
+        const html = { contenS: draftToHtml(convertToRaw(c)) }
+        this.setState(html)
     }
 
+
+
     render() {
-        console.log('state', this.state.parrafo);
+        console.log('statehtml', this.state.contenS);
         return (
             <div>
                 <h1>desde firebase</h1>
                 <div >
-                    {/* {
-                        this.state.parrafo? <div
-                        dangerouslySetInnerHTML={{
-                            __html: this.state.parrafo
-                        }}></div>
-                        :<p>Loading....</p>
-                    } */}
                     {
-                        this.state.parrafo ? 
-                        <div>{ ReactHtmlParser(this.state.parrafo) }</div>
-                        :<p>Loading...</p>
+
+                        this.state.contenS?
+                            <div>{ReactHtmlParser(this.state.contenS)}</div>
+                            : <p>Loading...</p>
                     }
                 </div>
             </div>
