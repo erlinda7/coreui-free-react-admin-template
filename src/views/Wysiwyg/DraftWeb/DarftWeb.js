@@ -18,7 +18,7 @@ class DraftWeb extends Component {
 
     async componentDidMount() {
 
-        const docRef = await db.collection("draft2").doc("32twWPBBmex2jyN2ROrc")
+        const docRef = await db.collection("draft3").doc("UWNLIiJYpeiNksaHFvKu")
             .get().then(function (doc) {
                 if (doc.exists) {
                     console.log("Document data:", doc.data());
@@ -29,10 +29,12 @@ class DraftWeb extends Component {
             }).catch(function (error) {
                 console.log("Error getting document:", error);
             });
-        // this.setState(docRef)
-        const c = convertFromRaw(JSON.parse(docRef.contenS))
-        const html = { contenS: draftToHtml(convertToRaw(c)) }
-        this.setState(html)
+         this.setState(docRef)
+         //const c = convertFromRaw(JSON.parse(docRef.contenS))
+         const html = { contenS: draftToHtml(docRef.infJSON) }
+         
+         
+         this.setState(html)
     }
 
 
