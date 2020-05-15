@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 
-import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser';
+import ReactHtmlParser from 'react-html-parser';
 
-import { convertToRaw, convertFromRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 
 import { db } from '../../../services/firebase/setup'
@@ -18,7 +17,7 @@ class DraftWeb extends Component {
 
     async componentDidMount() {
 
-        const docRef = await db.collection("draft3").doc("UWNLIiJYpeiNksaHFvKu")
+        const docRef = await db.collection("settings").doc("termsOfService")
             .get().then(function (doc) {
                 if (doc.exists) {
                     console.log("Document data:", doc.data());
@@ -29,15 +28,12 @@ class DraftWeb extends Component {
             }).catch(function (error) {
                 console.log("Error getting document:", error);
             });
-         this.setState(docRef)
-         //const c = convertFromRaw(JSON.parse(docRef.contenS))
-         const html = { contenS: draftToHtml(docRef.infJSON) }
+
+         const html = { contenS: draftToHtml(docRef.content) }
          
          
          this.setState(html)
     }
-
-
 
     render() {
         console.log('statehtml', this.state.contenS);

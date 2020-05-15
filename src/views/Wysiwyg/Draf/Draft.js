@@ -1,82 +1,95 @@
-import React, { Component } from 'react';
-import { EditorState, convertFromHTML, ContentState } from 'draft-js';
+import React, { Component } from "react"
+import { convertFromRaw, EditorState } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
-
-//import {stateFromHTML} from 'draft-js-import-html'
-
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
-
 
 import { db } from '../../../services/firebase/setup'
 
+const content = {
+  "entityMap": {},
+  "blocks": [
+    {
+      "key": "637gr",
+      "text": "",
+      "type": "unstyled",
+      "depth": 0,
+      "inlineStyleRanges": [],
+      "entityRanges": [],
+      "data": {}
+    }
+  ]
+};
 
 class Draft extends Component {
   constructor(props) {
     super(props);
-    // this.state = { editorState: EditorState.createEmpty() }
-    const html = `<p>Lorem ipsum <b>dolor</b> sit amet, <i>consectetuer adipiscing elit.</i></p>
-    <p>Aenean commodo ligula eget dolor. <b><i>Aenean massa.</i></b></p>`;
-
-    const blocksFromHTML = convertFromHTML(html);
-
-    //version 0.9.1 convertFromHtml 
-    //const content = ContentState.createFromBlockArray(blocksFromHTML)
-    //version 0.10.0 convertFromHtml 
-    const content = ContentState.createFromBlockArray(
-      blocksFromHTML.contentBlocks,
-      blocksFromHTML.entityMap
-    )
-    
-    this.state = { editorState: EditorState.createWithContent(content) }
-    // this.enviarDatos = this.enviarDatos.bind(this)
+    const contentState = convertFromRaw(content);
+    const editorState = EditorState.createWithContent(contentState);
+    this.state = {
+      contentState,
+      editorState
+    }
   }
 
-  onEditorStateChange = (editorState) => {
+  onContentStateChange = (contentState) => {
     this.setState({
-      editorState,
+      contentState,
     });
   };
 
-  // enviarDatos = async () => {
-  //   const { editorState } = this.state;
-  //   const parrafo = draftToHtml(convertToRaw(editorState.getCurrentContent()))
-  //   console.log('enviando', { parrafo: parrafo });
-  //   await db
-  //     .collection('draftHtml')
-  //     .add({ parrafo: parrafo })
-  //     .then(function (docRef) {
-  //       console.log("Document written with ID: ", docRef.id);
-  //     })
-  //     .catch(function (error) {
-  //       console.error("Error adding document: ", error);
-  //     });
-  // }
+  onEditorStateChange = (editorState) => {
+    this.setState({
+      editorState
+    });
+  };
 
+  async componentDidMount() {
 
+    const docRef = await db.collection("settings").doc("termsOfService")
+      .get().then(function (doc) {
+        if (doc.exists) {
+          console.log("Document data:", doc.data());
+          return doc.data()
+        } else {
+          console.log("No such document!");
+        }
+      }).catch(function (error) {
+        console.log("Error getting document:", error);
+      });
+      
+      if(Object.keys(docRef).length !== 0 ){
+        this.setState({ 
+          editorState: EditorState.createWithContent(convertFromRaw(docRef.content)),
+        })
+      }
+ 
+  }
+  enviarDatos = async () => {
+    const { contentState } = this.state;
+    await db
+      .collection('settings')
+      .doc('termsOfService')
+      .update({ content: JSON.parse(JSON.stringify(contentState)) })
+      .then(function () {
+        console.log("Document successfully updated!");
+      })
 
+  }
 
   render() {
     const { editorState } = this.state;
-
-    // console.log('editorState', draftToHtml(convertToRaw(editorState.getCurrentContent())));
     return (
-
       <div>
         <Editor
           editorState={editorState}
-          wrapperClassName="wrapper-class"
-          editorClassName="editor-class"
-          toolbarClassName="toolbar-class"
           onEditorStateChange={this.onEditorStateChange}
+          onContentStateChange={this.onContentStateChange}
         />
-        {/* <textarea rows="10" cols="100"
+        <button onClick={this.enviarDatos}>Enviar</button>
+        {/* <textarea rows="50" cols="130"
           disabled
-          value={draftToHtml(convertToRaw(editorState.getCurrentContent()))}
+          value={JSON.stringify(this.state.contentState, null, 4)}
         /> */}
-
-        {/* <button onClick={this.enviarDatos}>Enviar</button> */}
-
-
       </div>
     );
   }
