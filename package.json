@@ -27,7 +27,7 @@
     "draftjs-to-html": "^0.9.1",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",
-    "firebase": "^7.14.3",
+    "firebase": "^10.9.0",
     "firebaseui": "^4.5.0",
     "flag-icon-css": "^3.3.0",
     "font-awesome": "^4.7.0",
